@@ -101,9 +101,26 @@ services:
             - '/dev/shm:/dev/shm'
         networks:
             - sail
+    
+    phpmyadmin:                
+        image: phpmyadmin/phpmyadmin:latest
+        depends_on:
+            - mysql
+        ports:
+            - '${FORWARD_PHPMYADMIN_PORT:-8080}:80'
+        environment:
+            PMA_HOST: mysql
+            PMA_PORT: 3306
+            PMA_USER: '${DB_USERNAME}'
+            PMA_PASSWORD: '${DB_PASSWORD}'
+            PMA_ARBITRARY: 1
+        networks:
+            - sail             
+
 networks:
     sail:
         driver: bridge
+
 volumes:
     sail-mysql:
         driver: local
